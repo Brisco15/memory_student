@@ -79,6 +79,9 @@ function memoryGame(){
     }
 
     function gameLogic(){
+
+        const index = this.getAttribute('data-index');
+        this.src = imgMix[index]
         // console.log(this.getAttribute('data-index'));
     }
 
