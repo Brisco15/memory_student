@@ -137,7 +137,7 @@ function memoryGame(){
     }
 
     function imageUnMatch(){
-        playAudio('sound/mp3/pong.mp3')
+           playAudio('sound/mp3/pong.mp3')
                 setTimeout(function(){
                     img1.src = 'img_1/memory_1.gif';
                     img2.src = 'img_1/memory_1.gif';
@@ -213,7 +213,7 @@ function memoryGame(){
         }else{
             this.innerText = 'Sound on'
         }
-        console.log(soundSwitch)
+        
     }
 
 
