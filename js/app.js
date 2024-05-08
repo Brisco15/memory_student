@@ -107,48 +107,37 @@ function memoryGame(){
         if(counter === 1){
             img1 = this;
             changeImage(img1);
-            
-
         }
 
         if(counter === 2){
             img2 = this;
             changeImage(img2);
-
-
             //Vergleich
             if(img1.src === img2.src){
+                imageMatch();
+                gameEnd();
+            }else{
+                //2 ungleiche
+                imageUnMatch()
+                
+            }
 
-                //sound abspielen
-                playAudio('sound/mp3/spawn.mp3');
+        }
+
+    }//Ende function gameLogic
+
+    function imageMatch(){
+        playAudio('sound/mp3/spawn.mp3');
 
                 //1 pärchen -2 gleiche
                 img1.src = 'img_1/wow.gif';
                 img2.src = 'img_1/wow.gif';
                 counter = 0;
 
-                //Spiel Ende
-                pairs ++;
-            if(pairs === max/2){
-                playAudio('sound/mp3/winner.mp3')
-                //  if(pairs === 1){
-                    
-                    //ENDE
-                    //Alle Bilder drehen / wechseln
-                    const imgs = group('#game img');
-                    const le = imgMix.length;
-                    for(let i =0; i < le; i++){
-                        imgs[i].src = imgMix[i];
-                    }
-                    el('#start').className = 'start-aktiv';
+    }
 
-                    timeOutput();                    
-                }
-
-            }else{
-                //2 ungleiche
-                //sound abspielen!
-                playAudio('sound/mp3/pong.mp3')
+    function imageUnMatch(){
+        playAudio('sound/mp3/pong.mp3')
                 setTimeout(function(){
                     img1.src = 'img_1/memory_1.gif';
                     img2.src = 'img_1/memory_1.gif';
@@ -158,13 +147,28 @@ function memoryGame(){
 
                 },400);
 
-            }
+    } //Ende UnmMatch
 
-        }
+    function gameEnd(){
+         //Spiel Ende
+         pairs ++;
+         if(pairs === max/2){
+             playAudio('sound/mp3/winner.mp3')
+                 
+                 //ENDE
+                 //Alle Bilder drehen / wechseln
+                 const imgs = group('#game img');
+                 const le = imgMix.length;
+                 for(let i =0; i < le; i++){
+                     imgs[i].src = imgMix[i];
+                 }
+                 el('#start').className = 'start-aktiv';
 
+                 timeOutput();                    
+             }
         
-        // console.log(this.getAttribute('data-index'));
     }
+
 
     function timeOutput(){
         const stopTime = new Date();
