@@ -14,6 +14,10 @@ function memoryGame(){
         clickCounter = 0;    //zählt alle Klicks
         startTime    = null; //Spielstart -Zeitstempel
         soundSwitch  = false;//Sound ein - aus
+
+        //Text Ausgaben leeren
+        el('#zeit').innerText = '';
+        el('#klicks').innerText = '';
     }
 
 
@@ -72,6 +76,14 @@ function memoryGame(){
         return mix;
 
     }
+    
+       function setStartTimeStamp() {
+            if(clickCounter === 1){
+                startTime = new Date()
+
+            } 
+        }
+    
 
 
     function countAllClicks(){
@@ -82,6 +94,7 @@ function memoryGame(){
     function gameLogic(){
         counter++;
         countAllClicks();
+        setStartTimeStamp();
 
         if(counter === 1){
             img1 = this;
@@ -102,6 +115,9 @@ function memoryGame(){
 
             //Vergleich
             if(img1.src === img2.src){
+                //sound abspielen
+                playAudio('sound/mp3/spawn.mp3');
+
                 //1 pärchen -2 gleiche
                 img1.src = 'img_1/wow.gif';
                 img2.src = 'img_1/wow.gif';
@@ -110,6 +126,7 @@ function memoryGame(){
                 //Spiel Ende
                 pairs ++;
             if(pairs === max/2){
+                playAudio('sound/mp3/winner.mp3')
                 //  if(pairs === 1){
                     
                     //ENDE
@@ -120,11 +137,14 @@ function memoryGame(){
                         imgs[i].src = imgMix[i];
                     }
                     el('#start').className = 'start-aktiv';
-                    
+
+                    timeOutput();                    
                 }
 
             }else{
                 //2 ungleiche
+                //sound abspielen!
+                playAudio('sound/mp3/pong.mp3')
                 setTimeout(function(){
                     img1.src = 'img_1/memory_1.gif';
                     img2.src = 'img_1/memory_1.gif';
@@ -142,6 +162,14 @@ function memoryGame(){
         // console.log(this.getAttribute('data-index'));
     }
 
+    function timeOutput(){
+        const stopTime = new Date();
+        const diff = Math.floor((stopTime - startTime) / 1000);//sekund
+        const str =`Du hast ${diff} Sekunden gespielt`;
+        el('#zeit').innerText = str;
+    }
+
+
     function newGame (){
         initVaris();
         const imgs = group('#game img');
@@ -158,9 +186,37 @@ function memoryGame(){
 
     }
 
+    function playAudio(path){
+        // if(!soundSwitch){return}
+        if (soundSwitch){
+            const sound = new Audio();
+            sound.src = path;
+            sound.play();
+
+        }
+        
+    }
+
+    
+    function startStopAudio(){
+        soundSwitch = !soundSwitch;
+        if(soundSwitch){
+            this.innerText = 'Sound off'
+        }else{
+            this.innerText = 'Sound on'
+        }
+        console.log(soundSwitch)
+    }
+
+
+
+
+
+
     initVaris();
     createField();
     el('#start').addEventListener('click',newGame);
+    el('#audio').addEventListener('click',startStopAudio);
     
 
 }
