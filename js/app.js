@@ -91,30 +91,34 @@ function memoryGame(){
         el('#klicks').innerText = `Du hast ${clickCounter} mal geklickt`
     }
 
+    function changeImage(img){
+        img.removeEventListener('click', gameLogic);
+        const index = img.getAttribute('data-index');
+        img.src = imgMix[index];
+
+    }
+
     function gameLogic(){
+        
         counter++;
         countAllClicks();
         setStartTimeStamp();
 
         if(counter === 1){
             img1 = this;
+            changeImage(img1);
             
-            img1.removeEventListener('click', gameLogic);
-            const index = img1.getAttribute('data-index');
-            img1.src = imgMix[index];
 
         }
 
         if(counter === 2){
             img2 = this;
-
-            img2.removeEventListener('click', gameLogic);
-            const index = img2.getAttribute('data-index');
-            img2.src = imgMix[index];
+            changeImage(img2);
 
 
             //Vergleich
             if(img1.src === img2.src){
+
                 //sound abspielen
                 playAudio('sound/mp3/spawn.mp3');
 
