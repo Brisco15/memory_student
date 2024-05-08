@@ -4,14 +4,9 @@ function memoryGame(){
 
     function initVaris(){
         max = 16;              //Anzahl der Bilder
-        // loadImgSet();//nur test
-
-
-        const tempSet = loadImgSet();
-        imgMix = mixMyImg(tempSet);
-        console.log(imgMix);
-
-
+        
+        // const tempSet = loadImgSet();
+        imgMix = mixMyImg(loadImgSet());
         counter = 0;           //zählt die aufgedeckten Bilder
         img1    = null;       //speichert das 1. Bild
         img2    = null;      //speichert das 2. Bild
@@ -78,21 +73,94 @@ function memoryGame(){
 
     }
 
-    function gameLogic(){
 
-        const index = this.getAttribute('data-index');
-        this.src = imgMix[index]
+    function countAllClicks(){
+        clickCounter ++;
+        el('#klicks').innerText = `Du hast ${clickCounter} mal geklickt`
+    }
+
+    function gameLogic(){
+        counter++;
+        countAllClicks();
+
+        if(counter === 1){
+            img1 = this;
+            
+            img1.removeEventListener('click', gameLogic);
+            const index = img1.getAttribute('data-index');
+            img1.src = imgMix[index];
+
+        }
+
+        if(counter === 2){
+            img2 = this;
+
+            img2.removeEventListener('click', gameLogic);
+            const index = img2.getAttribute('data-index');
+            img2.src = imgMix[index];
+
+
+            //Vergleich
+            if(img1.src === img2.src){
+                //1 pärchen -2 gleiche
+                img1.src = 'img_1/wow.gif';
+                img2.src = 'img_1/wow.gif';
+                counter = 0;
+
+                //Spiel Ende
+                pairs ++;
+            if(pairs === max/2){
+                //  if(pairs === 1){
+                    
+                    //ENDE
+                    //Alle Bilder drehen / wechseln
+                    const imgs = group('#game img');
+                    const le = imgMix.length;
+                    for(let i =0; i < le; i++){
+                        imgs[i].src = imgMix[i];
+                    }
+                    el('#start').className = 'start-aktiv';
+                    
+                }
+
+            }else{
+                //2 ungleiche
+                setTimeout(function(){
+                    img1.src = 'img_1/memory_1.gif';
+                    img2.src = 'img_1/memory_1.gif';
+                    img1.addEventListener('click',gameLogic);
+                    img2.addEventListener('click',gameLogic);
+                    counter = 0;
+
+                },400);
+
+            }
+
+        }
+
+        
         // console.log(this.getAttribute('data-index'));
     }
 
+    function newGame (){
+        initVaris();
+        const imgs = group('#game img');
+        const le = imgs.length;
+
+        for(let i =0; i< le; i ++){
+            imgs[i].src = 'img_1/memory_1.gif';
+            imgs[i].addEventListener('click', gameLogic);
+
+        }
+
+        el('#start').className = 'start-passiv';
 
 
-
-
-
+    }
 
     initVaris();
     createField();
+    el('#start').addEventListener('click',newGame);
     
 
 }
